@@ -16,6 +16,7 @@ I am learning to create interpreters and would highly appreciate constructive cr
 | jump    | Number    | Jump to line `n`                      |
 | print   | -         | Pop `a` and output it as a character  |
 | dup     | -         | Duplicate the top value on the stack  |
+
 Comments in this language start with an `#` and go all the way to the end of the line.
 
 &nbsp;
