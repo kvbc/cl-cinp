@@ -22,7 +22,7 @@ cl_prepr_t* cl_prepr_new(char* data) {
 
 
 void cl_prepr_run(cl_prepr_t* prepr) {
-	cl_vector_push(prepr->v_lines, 0);
+	cl_vector_push(prepr->v_lines, 1);
 	size_t len = strlen(prepr->data);
 
 	for(size_t i = 0; i < len; i++)
