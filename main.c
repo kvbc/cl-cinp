@@ -9,18 +9,18 @@ static char* read_file(char* fn) {
 
 	if(f) {
 		fseek(f, 0, SEEK_END);
-        size_t len = ftell(f);
-        fseek(f, 0, SEEK_SET);
+		size_t len = ftell(f);
+		fseek(f, 0, SEEK_SET);
 
-        buff = malloc(len + 1);
-        size_t read_len = fread(buff, 1, len, f);
-        if(len != read_len) {
-			free(buff);
-			buff = NULL;
-        }
+		buff = malloc(len + 1);
+		size_t read_len = fread(buff, 1, len, f);
+		if(len != read_len) {
+				free(buff);
+				buff = NULL;
+		}
 
-        fclose(f);
-        buff[len] = '\0';
+		fclose(f);
+		buff[len] = '\0';
 	}
 	else {
 		printf("\nFile '%s' not found", fn);
