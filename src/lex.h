@@ -14,8 +14,8 @@
 
 
 typedef enum {
-	TK_UNX = -2,                       // Unexpected
 	TK_EOF = CL_MEMREADER_EOS,         // End of file
+	TK_UNX,                            // Unexpected
 
 	TK_PUSH,
 	TK_POP,
