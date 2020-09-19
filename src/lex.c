@@ -6,7 +6,6 @@
 */
 
 
-
 #include "lex.h"
 
 #include <string.h>
@@ -14,13 +13,11 @@
 #include <stdbool.h>
 
 
-
 /*
 *
 * Static helper functions
 *
 */
-
 
 
 static bool cl_lex_isnumc(char c) {
@@ -83,13 +80,11 @@ static bool cl_lex_matches(cl_lex_state_t* ls, char* str) {
 }
 
 
-
 /*
 *
 * Lexical Analyzer
 *
 */
-
 
 
 cl_lex_state_t* cl_lex_new(char* data) {
@@ -148,6 +143,7 @@ void cl_lex_next(cl_lex_state_t* ls) {
 
 	ls->tk_type = TK_UNX;
 }
+
 
 void cl_lex_close(cl_lex_state_t* ls) {
 	cl_memreader_close(ls->reader);
