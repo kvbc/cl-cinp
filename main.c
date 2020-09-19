@@ -29,6 +29,7 @@ static char* read_file(char* fn) {
 	return buff;
 }
 
+
 int main(int argc, char** argv) {
 	if(argc > 1) {
 		char* file = read_file(argv[1]);
