@@ -1,5 +1,3 @@
-
-
 #include "src/vm.h"
 #include <stdio.h>
 #include <stdlib.h>
