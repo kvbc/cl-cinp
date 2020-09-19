@@ -11,7 +11,6 @@
 #include <string.h>
 
 
-
 cl_memreader_t* cl_memreader_new(char* data) {
 	cl_memreader_t* reader = malloc(sizeof(cl_memreader_t));
 	reader->cur = data;
