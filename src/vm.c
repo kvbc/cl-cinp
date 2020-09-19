@@ -11,7 +11,6 @@
 #include <stdlib.h>
 
 
-
 cl_vm_t* cl_vm_new(void) {
 	cl_vm_t* vm = malloc(sizeof(cl_vm_t));
 	vm->st = cl_vector_new(100);
