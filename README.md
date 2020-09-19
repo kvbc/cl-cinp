@@ -9,9 +9,9 @@ I am learning to create interpreters and would highly appreciate constructive cr
 
 | Command | Parameter | Meaning                               |
 | :-----: | :-------: | :-----------------------------------: |
-| push    | Number    | Push the number on to the stack       |
+| push    | Number    | Push the number onto the stack        |
 | pop     | -         | Pop off the top number on the stack   |
-| add     | -         | Pop `a` and `b`. Push `a + b`      |
+| add     | -         | Pop `a` and `b`. Push `a + b`         |
 | ifeq    | Number    | Pop `a`. If `a != 0` jump to line `n` |
 | jump    | Number    | Jump to line `n`                      |
 | print   | -         | Pop `a` and output it as a character  |
