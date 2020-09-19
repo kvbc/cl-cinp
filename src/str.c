@@ -6,11 +6,9 @@
 */
 
 
-
 #include "str.h"
 #include <string.h>
 #include <stdlib.h>
-
 
 
 cl_str_t* cl_str_new(void) {
