@@ -22,13 +22,13 @@
 
 static bool cl_lex_isnumc(char c) {
 	return c == '-'
-		|| c >= '0' && c <= '9';
+	    || c >= '0' && c <= '9';
 }
 
 
 static bool cl_lex_isws(char c) {
 	return c == '\n' || c == '\r'
-		|| c == '\t' || c == '\f' || c == '\v' || c == ' ';
+	    || c == '\t' || c == '\f' || c == '\v' || c == ' ';
 }
 
 
