@@ -11,19 +11,19 @@ static char* read_file(char* fn) {
 
 	if(f) {
 		fseek(f, 0, SEEK_END);
-        size_t len = ftell(f);
-        fseek(f, 0, SEEK_SET);
+		size_t len = ftell(f);
+		fseek(f, 0, SEEK_SET);
+		
+		buff = malloc(len + 1);
+		buff[len] = '\0';
+		size_t read_len = fread(buff, 1, len, f);
 
-        buff = malloc(len + 1);
-        buff[len] = '\0';
-        size_t read_len = fread(buff, 1, len, f);
-
-        if(len != read_len) {
+		if(len != read_len) {
 			free(buff);
 			buff = NULL;
-        }
+		}
 
-        fclose(f);
+		fclose(f);
 	}
 	else {
 		printf("\nFile '%s' not found", fn);
