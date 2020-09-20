@@ -6,11 +6,13 @@
 */
 
 
+
 #include "lex.h"
 
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 
 
 /*
@@ -20,21 +22,22 @@
 */
 
 
+
 static bool cl_lex_isnumc(char c) {
 	return c == '-'
-	    || c >= '0' && c <= '9';
+		|| c >= '0' && c <= '9';
 }
 
 
 static bool cl_lex_isws(char c) {
 	return c == '\n' || c == '\r'
-	    || c == '\t' || c == '\f' || c == '\v' || c == ' ';
+		|| c == '\t' || c == '\f' || c == '\v' || c == ' ';
 }
 
 
 static void cl_lex_nextc(cl_lex_state_t* ls) {
 	ls->cur = cl_memreader_readbyte(ls->reader);
-	ls->col++;
+	++ls->col;
 }
 
 
@@ -46,6 +49,7 @@ static void cl_lex_skip(cl_lex_state_t* ls, size_t bytes) {
 
 static void cl_lex_readn(cl_lex_state_t* ls) {
 	++ls->col;
+	ls->tk_type = TK_NUM;
 	char* beg = ls->reader->cur - 1;
 	char* end = beg + 1;
 
@@ -79,11 +83,13 @@ static bool cl_lex_matches(cl_lex_state_t* ls, char* str) {
 }
 
 
+
 /*
 *
 * Lexical Analyzer
 *
 */
+
 
 
 cl_lex_state_t* cl_lex_new(char* data) {
@@ -129,7 +135,6 @@ void cl_lex_next(cl_lex_state_t* ls) {
 			return;
 		case '0': case '1': case '2': case '3': case '4':
 		case '5': case '6': case '7': case '8': case '9':
-			ls->tk_type = TK_NUM;
 			cl_lex_readn(ls);
 			return;
 		case TK_EOF:
@@ -143,7 +148,6 @@ void cl_lex_next(cl_lex_state_t* ls) {
 
 	ls->tk_type = TK_UNX;
 }
-
 
 void cl_lex_close(cl_lex_state_t* ls) {
 	cl_memreader_close(ls->reader);
