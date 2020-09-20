@@ -1,3 +1,5 @@
+
+
 #include "src/vm.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,18 +11,19 @@ static char* read_file(char* fn) {
 
 	if(f) {
 		fseek(f, 0, SEEK_END);
-		size_t len = ftell(f);
-		fseek(f, 0, SEEK_SET);
+        size_t len = ftell(f);
+        fseek(f, 0, SEEK_SET);
 
-		buff = malloc(len + 1);
-		size_t read_len = fread(buff, 1, len, f);
-		if(len != read_len) {
-				free(buff);
-				buff = NULL;
-		}
+        buff = malloc(len + 1);
+        buff[len] = '\0';
+        size_t read_len = fread(buff, 1, len, f);
 
-		fclose(f);
-		buff[len] = '\0';
+        if(len != read_len) {
+			free(buff);
+			buff = NULL;
+        }
+
+        fclose(f);
 	}
 	else {
 		printf("\nFile '%s' not found", fn);
@@ -28,7 +31,6 @@ static char* read_file(char* fn) {
 
 	return buff;
 }
-
 
 int main(int argc, char** argv) {
 	if(argc > 1) {
