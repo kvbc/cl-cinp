@@ -6,7 +6,6 @@
 */
 
 
-
 #include "lex.h"
 
 #include <string.h>
@@ -148,6 +147,7 @@ void cl_lex_next(cl_lex_state_t* ls) {
 
 	ls->tk_type = TK_UNX;
 }
+
 
 void cl_lex_close(cl_lex_state_t* ls) {
 	cl_memreader_close(ls->reader);
