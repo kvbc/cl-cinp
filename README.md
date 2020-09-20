@@ -2,8 +2,6 @@
 
 Custom language interpreter written in C. The language consists of 7 commands and was inspired by a [reddit comment](https://stackoverflow.com/questions/6887471/how-would-i-go-about-writing-an-interpreter-in-c). In the future I might add some extra commands and features, like REPL.
 
-I am learning to create interpreters and would highly appreciate constructive criticism / feedback.
-
 &nbsp;
 # Syntax
 
