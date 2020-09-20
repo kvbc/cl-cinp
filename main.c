@@ -21,6 +21,7 @@ static char* read_file(char* fn) {
 		if(len != read_len) {
 			free(buff);
 			buff = NULL;
+			printf("\nFailed to read file '%s'", fn);
 		}
 
 		fclose(f);
