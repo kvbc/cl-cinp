@@ -49,7 +49,6 @@ static void cl_lex_skip(cl_lex_state_t* ls, size_t bytes) {
 
 static void cl_lex_readn(cl_lex_state_t* ls) {
 	++ls->col;
-	ls->tk_type = TK_NUM;
 	char* beg = ls->reader->cur - 1;
 	char* end = beg + 1;
 
@@ -135,6 +134,7 @@ void cl_lex_next(cl_lex_state_t* ls) {
 			return;
 		case '0': case '1': case '2': case '3': case '4':
 		case '5': case '6': case '7': case '8': case '9':
+			ls->tk_type = TK_NUM;
 			cl_lex_readn(ls);
 			return;
 		case TK_EOF:
