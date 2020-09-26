@@ -18,6 +18,6 @@ Custom language interpreter written in C. The language consists of 7 commands an
 Comments in this language start with an `#` and go all the way to the end of the line.
 
 &nbsp;
-# Samples
+# Examples
 
-Samples can be found in the `samples` directory.
+Examples can be found in the `samples` directory.
