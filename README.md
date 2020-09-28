@@ -20,4 +20,4 @@ Comments in this language start with an `#` and go all the way to the end of the
 &nbsp;
 # Examples
 
-Examples can be found in the `samples` directory.
+Examples can be found in the `examples` directory.
