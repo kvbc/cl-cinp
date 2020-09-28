@@ -19,6 +19,5 @@ typedef struct {
 } cl_prepr_t;
 
 
-cl_prepr_t* cl_prepr_new(void);
-void cl_prepr_run(cl_prepr_t* prepr, char* src);
+cl_prepr_t* cl_prepr_new(char* src);
 void cl_prepr_close(cl_prepr_t* prepr);
