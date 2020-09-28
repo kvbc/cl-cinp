@@ -131,6 +131,7 @@ void cl_lex_next(cl_lex_state_t* ls) {
 			if(cl_lex_matches(ls, "up")) ls->tk_type = TK_DUP;
 			else break;
 			return;
+		case '-':
 		case '0': case '1': case '2': case '3': case '4':
 		case '5': case '6': case '7': case '8': case '9':
 			ls->tk_type = TK_NUM;
