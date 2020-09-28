@@ -99,8 +99,7 @@ static CL_VM_STATE cl_vm_runtk(cl_vm_t* vm) {
 
 void cl_vm_run(cl_vm_t* vm, char* src) {
 	vm->ls = cl_lex_new(src);
-	vm->prepr = cl_prepr_new();
-	cl_prepr_run(vm->prepr, src);
+	vm->prepr = cl_prepr_new(src);
 
 	do {
 		if(!cl_vm_runtk(vm) && vm->err) {
