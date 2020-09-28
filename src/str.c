@@ -19,7 +19,7 @@ cl_str_t* cl_str_new(void) {
 }
 
 
-void cl_str_substr(cl_str_t* buff, char* src, size_t len) {
+cl_str_t* cl_str_substr(cl_str_t* buff, char* src, size_t len) {
 	if(len > buff->len) {
 		if(buff->src != NULL)
 			free(buff->src);
@@ -28,6 +28,7 @@ void cl_str_substr(cl_str_t* buff, char* src, size_t len) {
 	buff->len = len;
 	memcpy(buff->src, src, len);
 	buff->src[len] = '\0';
+	return buff;
 }
 
 
