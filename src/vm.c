@@ -35,7 +35,7 @@ static CL_VM_STATE cl_vm_jump(cl_vm_t* vm) {
 		return CL_VM_ERROR;
 	}
 	vm->ls->line = line;
-	vm->ls->reader->cur = &vm->prepr->data[vm->prepr->v_lines->raw[line - 1] + 1];
+	vm->ls->reader->cur = &vm->prepr->data->src[vm->prepr->v_lines->raw[line - 1] + 1];
 	return CL_VM_SUCCESS;
 }
 
@@ -99,8 +99,8 @@ static CL_VM_STATE cl_vm_runtk(cl_vm_t* vm) {
 
 void cl_vm_run(cl_vm_t* vm, char* src) {
 	vm->ls = cl_lex_new(src);
-	vm->prepr = cl_prepr_new(src);
-	cl_prepr_run(vm->prepr);
+	vm->prepr = cl_prepr_new();
+	cl_prepr_run(vm->prepr, src);
 
 	do {
 		if(!cl_vm_runtk(vm) && vm->err) {
