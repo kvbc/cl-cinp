@@ -56,6 +56,7 @@ static void cl_lex_readn(cl_lex_state_t* ls) {
 
 	cl_str_substr(ls->tk_lexeme, beg, len);
 	cl_lex_skip(ls, len - 1);
+	ls->tk_num = strtol(ls->tk_lexeme->src, NULL, 10);
 }
 
 
