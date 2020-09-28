@@ -34,6 +34,7 @@ typedef struct {
 	cl_memreader_t* reader;
 	cl_token_type tk_type;
 	cl_str_t* tk_lexeme;
+	int tk_num;
 	size_t line;
 	size_t col;
 	char cur;
