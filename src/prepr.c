@@ -22,6 +22,9 @@ cl_prepr_t* cl_prepr_new(void) {
 
 
 void cl_prepr_run(cl_prepr_t* prepr, char* src) {
+	if(prepr->data)	   cl_str_free(prepr->data);
+	if(prepr->v_lines) cl_vector_free(prepr->v_lines);
+
 	size_t len = strlen(src);
 	prepr->data = cl_str_substr(cl_str_new(), src, len);
 	prepr->lines = 1;
