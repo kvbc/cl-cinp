@@ -25,8 +25,9 @@ void cl_prepr_run(cl_prepr_t* prepr) {
 	cl_vector_push(prepr->v_lines, 1);
 	size_t len = strlen(prepr->data);
 
-	for(size_t i = 0; i < len; i++)
-		if(prepr->data[i] == '\n') {
+	for(size_t i = 0; i < len; ++i)
+		if(prepr->data[i] == '\n' ||
+		  (prepr->data[i] == '\r' && prepr->data[i + 1] == '\n')) {
 			++prepr->lines;
 			cl_vector_push(prepr->v_lines, i);
 		}
