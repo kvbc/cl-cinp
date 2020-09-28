@@ -29,7 +29,7 @@ static CL_VM_STATE cl_vm_expectn(cl_vm_t* vm, char* err) {
 
 
 static CL_VM_STATE cl_vm_jump(cl_vm_t* vm) {
-	int line = strtoll(vm->ls->tk_lexeme->src, NULL, 10);
+	int line = vm->ls->tk_num;
 	if(line < 1 || line > vm->prepr->lines) {
 		vm->err = "Invalid line number";
 		return CL_VM_ERROR;
@@ -47,7 +47,7 @@ static CL_VM_STATE cl_vm_runtk(cl_vm_t* vm) {
 		case TK_PUSH:
 			if(!cl_vm_expectn(vm, "Expected an number for command 'push'"))
 				return CL_VM_ERROR;
-			cl_vector_push(vm->st, strtoll(vm->ls->tk_lexeme->src, NULL, 10));
+			cl_vector_push(vm->st, vm->ls->tk_num);
 			break;
 		case TK_POP:
 			cl_vector_pop(vm->st);
