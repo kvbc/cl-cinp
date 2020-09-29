@@ -7,10 +7,19 @@
 
 
 #include "lex.h"
+#include "char.h"
 
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
+
+
+static const char* const CL_COMMANDS[] = {
+	"push", "pop", "add", "ifeq",
+	"jump", "print", "dup", "swap"
+};
+static const size_t CL_COMMAND_COUNT = sizeof(CL_COMMANDS) / sizeof(char*);
 
 
 
@@ -22,63 +31,43 @@
 
 
 
-static bool cl_lex_isnumc(char c) {
-	return c == '-'
-		|| c >= '0' && c <= '9';
-}
-
-
-static bool cl_lex_isws(char c) {
-	return c == '\n' || c == '\r'
-		|| c == '\t' || c == '\f' || c == '\v' || c == ' ';
-}
-
-
-static void cl_lex_nextc(cl_lex_state_t* ls) {
-	ls->cur = cl_memreader_readbyte(ls->reader);
-	++ls->col;
-}
-
-
-static void cl_lex_skip(cl_lex_state_t* ls, size_t bytes) {
-	cl_memreader_skip(ls->reader, bytes);
-	ls->col += bytes;
-}
-
-
 static void cl_lex_readn(cl_lex_state_t* ls) {
-	++ls->col;
-	char* beg = ls->reader->cur - 1;
+	char* beg = ls->rdr->cur - 1;
 	char* end = beg + 1;
-
-	while(cl_lex_isnumc(*end)) end++;
+	while(cl_char_isnum(*end)) end++;
 	size_t len = end - beg;
 
 	cl_str_substr(ls->tk_lexeme, beg, len);
-	cl_lex_skip(ls, len - 1);
+	cl_reader_skip(ls->rdr, len - 1);
 	ls->tk_num = strtol(ls->tk_lexeme->src, NULL, 10);
 }
 
 
-static void cl_lex_absorbcmt(cl_lex_state_t* ls) {
-	char* beg = ls->reader->cur - 1;
+static void cl_lex_readident(cl_lex_state_t* ls) {
+	char* beg = ls->rdr->cur - 1;
 	char* end = beg + 1;
-	while(*end != '\n') end++;
+	while(cl_char_isident(*end)) ++end;
+
 	size_t len = end - beg;
-	cl_lex_skip(ls, len - 1);
+	cl_str_substr(ls->tk_lexeme, beg, len);
+	cl_reader_skip(ls->rdr, len - 1);
 }
 
 
-static bool cl_lex_matches(cl_lex_state_t* ls, char* str) {
-	cl_str_t buff = {NULL};
-	size_t len = strlen(str);
-	cl_str_substr(&buff, ls->reader->cur, len);
+static void cl_lex_absorbcmt(cl_lex_state_t* ls) {
+	char* beg = ls->rdr->cur - 1;
+	char* end = beg + 1;
+	while(*end != '\n') ++end;
+	size_t len = end - beg;
+	cl_reader_skip(ls->rdr, len);
+}
 
-	bool eq = strcmp(buff.src, str) == 0;
-	if(eq) cl_lex_skip(ls, len);
 
-	free(buff.src);
-	return eq;
+static void cl_lex_absorbws(cl_lex_state_t* ls) {
+	do ls->cur = cl_reader_readbyte(ls->rdr);
+	while(cl_char_isws(ls->cur));
+	cl_reader_skip(ls->rdr, -1);
+	cl_lex_next(ls);
 }
 
 
@@ -93,44 +82,19 @@ static bool cl_lex_matches(cl_lex_state_t* ls, char* str) {
 
 cl_lex_state_t* cl_lex_new(char* data) {
 	cl_lex_state_t* ls = malloc(sizeof(cl_lex_state_t));
-	ls->reader = cl_memreader_new(data);
+	ls->rdr = cl_reader_new(data);
 	ls->tk_lexeme = cl_str_new();
-	ls->line = 1;
-	ls->col = 0;
 	return ls;
 }
 
 
 void cl_lex_next(cl_lex_state_t* ls) {
-	cl_lex_nextc(ls);
+	ls->cur = cl_reader_readbyte(ls->rdr);
 
 	switch(ls->cur) {
-		case '\n':
-			++ls->line;
-			ls->col = 0;
-		case ' ': case '\t': case '\f': case '\v': case '\r':
-			return cl_lex_next(ls);
-		case 'p':
-			if(cl_lex_matches(ls, "ush")) ls->tk_type = TK_PUSH;
-			else if(cl_lex_matches(ls, "op")) ls->tk_type = TK_POP;
-			else if(cl_lex_matches(ls, "rint")) ls->tk_type = TK_PRINT;
-			else break;
-			return;
-		case 'a':
-			if(cl_lex_matches(ls, "dd")) ls->tk_type = TK_ADD;
-			else break;
-			return;
-		case 'i':
-			if(cl_lex_matches(ls, "feq")) ls->tk_type = TK_IFEQ;
-			else break;
-			return;
-		case 'j':
-			if(cl_lex_matches(ls, "ump")) ls->tk_type = TK_JUMP;
-			else break;
-			return;
-		case 'd':
-			if(cl_lex_matches(ls, "up")) ls->tk_type = TK_DUP;
-			else break;
+		case '#':
+			ls->tk_type = TK_CMT;
+			cl_lex_absorbcmt(ls);
 			return;
 		case '-':
 		case '0': case '1': case '2': case '3': case '4':
@@ -141,10 +105,22 @@ void cl_lex_next(cl_lex_state_t* ls) {
 		case TK_EOF:
 			ls->tk_type = TK_EOF;
 			return;
-		case '#':
-			ls->tk_type = TK_CMT;
-			cl_lex_absorbcmt(ls);
-			return;
+		default:
+			if(cl_char_isident(ls->cur)) {
+				cl_lex_readident(ls);
+				for(size_t i = 0; i < CL_COMMAND_COUNT; ++i)
+					if(strcmp(ls->tk_lexeme->src, CL_COMMANDS[i]) == 0) {
+						ls->tk_type = TK_PUSH + i;
+						return;
+					}
+				ls->tk_type = TK_IDENT;
+				return;
+			}
+			else if(cl_char_isws(ls->cur)) {
+				cl_lex_absorbws(ls);
+				return;
+			}
+			break;
 	}
 
 	ls->tk_type = TK_UNX;
@@ -152,7 +128,7 @@ void cl_lex_next(cl_lex_state_t* ls) {
 
 
 void cl_lex_close(cl_lex_state_t* ls) {
-	cl_memreader_close(ls->reader);
+	cl_reader_close(ls->rdr);
 	cl_str_free(ls->tk_lexeme);
 	free(ls);
 }
