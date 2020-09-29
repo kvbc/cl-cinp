@@ -8,6 +8,7 @@
 
 #include "str.h"
 #include <string.h>
+
 #include <stdlib.h>
 
 
@@ -26,8 +27,8 @@ cl_str_t* cl_str_substr(cl_str_t* buff, char* src, size_t len) {
 		buff->src = malloc(len + 1);
 	}
 	buff->len = len;
-	memcpy(buff->src, src, len);
 	buff->src[len] = '\0';
+	memcpy(buff->src, src, len);
 	return buff;
 }
 
