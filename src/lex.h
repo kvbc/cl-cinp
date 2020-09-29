@@ -41,6 +41,6 @@ typedef struct {
 } cl_lex_state_t;
 
 
-cl_lex_state_t* cl_lex_new(char* data);
+cl_lex_state_t* cl_lex_new(char* src);
 void cl_lex_next(cl_lex_state_t* ls);
 void cl_lex_close(cl_lex_state_t* ls);
