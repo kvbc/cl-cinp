@@ -67,7 +67,6 @@ static void cl_lex_absorbws(cl_lex_state_t* ls) {
 	do ls->cur = cl_reader_readbyte(ls->rdr);
 	while(cl_char_isws(ls->cur));
 	cl_reader_skip(ls->rdr, -1);
-	cl_lex_next(ls);
 }
 
 
@@ -96,12 +95,6 @@ void cl_lex_next(cl_lex_state_t* ls) {
 			ls->tk_type = TK_CMT;
 			cl_lex_absorbcmt(ls);
 			return;
-		case '-':
-		case '0': case '1': case '2': case '3': case '4':
-		case '5': case '6': case '7': case '8': case '9':
-			ls->tk_type = TK_NUM;
-			cl_lex_readn(ls);
-			return;
 		case TK_EOF:
 			ls->tk_type = TK_EOF;
 			return;
@@ -116,8 +109,14 @@ void cl_lex_next(cl_lex_state_t* ls) {
 				ls->tk_type = TK_IDENT;
 				return;
 			}
+			else if(cl_char_isnum(ls->cur)) {
+				ls->tk_type = TK_NUM;
+				cl_lex_readn(ls);
+				return;
+			}
 			else if(cl_char_isws(ls->cur)) {
 				cl_lex_absorbws(ls);
+				cl_lex_next(ls);
 				return;
 			}
 			break;
