@@ -7,6 +7,7 @@
 
 
 #include "vector.h"
+
 #include <stdlib.h>
 
 
@@ -21,7 +22,7 @@ cl_vector_t* cl_vector_new(size_t cap) {
 
 void cl_vector_push(cl_vector_t* v, int val) {
 	if(v->top == v->cap)
-		realloc(v->raw, v->cap += 25);
+		realloc(v->raw, (v->cap += 25) * sizeof(int));
 	v->raw[v->top++] = val;
 }
 
