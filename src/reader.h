@@ -9,16 +9,19 @@
 #pragma once
 
 #include <stddef.h>
-#define CL_MEMREADER_EOS -1
+#define CL_READER_EOS -1
 
 
 typedef struct {
+	char* beg;
 	char* cur;
 	char* end;
-} cl_memreader_t;
+	size_t col;
+	size_t line;
+} cl_reader_t;
 
 
-cl_memreader_t* cl_memreader_new(char* data);
-char cl_memreader_readbyte(cl_memreader_t* reader);
-void cl_memreader_skip(cl_memreader_t* reader, size_t bytes);
-void cl_memreader_close(cl_memreader_t* reader);
+cl_reader_t* cl_reader_new(char* src);
+char cl_reader_readbyte(cl_reader_t* rdr);
+void cl_reader_skip(cl_reader_t* rdr, size_t bytes);
+void cl_reader_close(cl_reader_t* rdr);
