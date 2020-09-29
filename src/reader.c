@@ -7,30 +7,44 @@
 
 
 #include "reader.h"
+#include "char.h"
+
 #include <stdlib.h>
 #include <string.h>
 
 
-cl_memreader_t* cl_memreader_new(char* data) {
-	cl_memreader_t* reader = malloc(sizeof(cl_memreader_t));
-	reader->cur = data;
-	reader->end = data + strlen(data);
-	return reader;
+cl_reader_t* cl_reader_new(char* src) {
+	cl_reader_t* rdr = malloc(sizeof(cl_reader_t));
+	rdr->beg = src;
+	rdr->cur = src;
+	rdr->end = src + strlen(src);
+	rdr->col = 1;
+	rdr->line = 1;
+	return rdr;
 }
 
 
-char cl_memreader_readbyte(cl_memreader_t* reader) {
-	if(reader->cur < reader->end)
-		return *reader->cur++;
-	return CL_MEMREADER_EOS;
+char cl_reader_readbyte(cl_reader_t* rdr) {
+	if(rdr->cur < rdr->end) {
+		char c = *rdr->cur++;
+		if(cl_char_islb(c)) {
+			if(cl_char_islb(*rdr->cur) && *rdr->cur != c) ++rdr->cur;
+			++rdr->line;
+			rdr->col = 1;
+		}
+		else ++rdr->col;
+		return c;
+	}
+	return CL_READER_EOS;
 }
 
 
-void cl_memreader_skip(cl_memreader_t* reader, size_t bytes) {
-	reader->cur += bytes;
+void cl_reader_skip(cl_reader_t* rdr, size_t bytes) {
+	rdr->cur += bytes;
+	rdr->col += bytes;
 }
 
 
-void cl_memreader_close(cl_memreader_t* reader) {
-	free(reader);
+void cl_reader_close(cl_reader_t* rdr) {
+	free(rdr);
 }
