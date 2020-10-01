@@ -7,6 +7,8 @@
 
 
 #include "vm.h"
+#include "char.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,12 +21,18 @@ cl_vm_t* cl_vm_new(void) {
 
 
 static CL_VM_STATE cl_vm_expectn(cl_vm_t* vm, char* err) {
-	cl_lex_next(vm->ls);
-	if(vm->ls->tk_type != TK_NUM) {
-		vm->err = err;
-		return CL_VM_ERROR;
+	char* beg = vm->ls->rdr->cur;
+	char* cur = beg + 1;
+	char* end = vm->ls->rdr->end;
+
+	while(cl_char_isws(*cur) && cur < end) ++cur;
+	if(cl_char_isnum(*cur)) {
+		cl_lex_next(vm->ls);
+		return CL_VM_SUCCESS;
 	}
-	return CL_VM_SUCCESS;
+
+	vm->err = err;
+	return CL_VM_ERROR;
 }
 
 
@@ -34,8 +42,9 @@ static CL_VM_STATE cl_vm_jump(cl_vm_t* vm) {
 		vm->err = "Invalid line number";
 		return CL_VM_ERROR;
 	}
-	vm->ls->line = line;
-	vm->ls->reader->cur = &vm->prepr->data->src[vm->prepr->v_lines->raw[line - 1] + 1];
+	vm->ls->rdr->col = 1;
+	vm->ls->rdr->line = line;
+	vm->ls->rdr->cur = vm->ls->rdr->beg + vm->prepr->v_lines->raw[line - 1];
 	return CL_VM_SUCCESS;
 }
 
@@ -56,8 +65,8 @@ static CL_VM_STATE cl_vm_runtk(cl_vm_t* vm) {
 			int a = cl_vector_pop(vm->st);
 			int b = cl_vector_pop(vm->st);
 			cl_vector_push(vm->st, a + b);
-			break;
 		}
+			break;
 		case TK_IFEQ:
 			if(!cl_vm_expectn(vm, "Expected an number for command 'ifeq'"))
 				return CL_VM_ERROR;
@@ -77,18 +86,31 @@ static CL_VM_STATE cl_vm_runtk(cl_vm_t* vm) {
 			int top = cl_vector_pop(vm->st);
 			cl_vector_push(vm->st, top);
 			cl_vector_push(vm->st, top);
-			break;
 		}
+			break;
+		case TK_SWAP: {
+			int a = cl_vector_pop(vm->st);
+			int b = cl_vector_pop(vm->st);
+			cl_vector_push(vm->st, a);
+			cl_vector_push(vm->st, b);
+		}
+			break;
 		case TK_NUM:
 			vm->err = NULL;
-			printf("\nError %d:%d: Unexpected number '%s'\n", vm->ls->line,
-				   vm->ls->col - vm->ls->tk_lexeme->len,
+			printf("\nError %d:%d: Unexpected number '%s'\n", vm->ls->rdr->line,
+				   vm->ls->rdr->col - vm->ls->tk_lexeme->len,
+				   vm->ls->tk_lexeme->src);
+			return CL_VM_ERROR;
+		case TK_IDENT:
+			vm->err = NULL;
+			printf("\nError %d:%d: Unexpected identifier '%s'\n", vm->ls->rdr->line,
+				   vm->ls->rdr->col - vm->ls->tk_lexeme->len,
 				   vm->ls->tk_lexeme->src);
 			return CL_VM_ERROR;
 		case TK_UNX:
 			vm->err = NULL;
-			printf("\nError %d:%d: Unexpected character '%c'\n", vm->ls->line,
-				   vm->ls->col,
+			printf("\nError %d:%d: Unexpected character '%c'\n", vm->ls->rdr->line,
+				   vm->ls->rdr->col,
 				   vm->ls->cur);
 			return CL_VM_ERROR;
 	}
@@ -103,8 +125,8 @@ void cl_vm_run(cl_vm_t* vm, char* src) {
 
 	do {
 		if(!cl_vm_runtk(vm) && vm->err) {
-			printf("\nError %d:%d: %s\n", vm->ls->line,
-				   vm->ls->col - (vm->ls->tk_lexeme->len * (vm->ls->tk_type == TK_NUM)),
+			printf("\nError %d:%d: %s\n", vm->ls->rdr->line,
+				   vm->ls->rdr->col - (vm->ls->tk_lexeme->len * (vm->ls->tk_type == TK_NUM)),
 				   vm->err);
 		}
 	} while(vm->ls->tk_type != TK_EOF);
