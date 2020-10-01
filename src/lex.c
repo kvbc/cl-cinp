@@ -66,8 +66,8 @@ static void cl_lex_absorbcmt(cl_lex_state_t* ls) {
 static void cl_lex_absorbws(cl_lex_state_t* ls) {
 	do ls->cur = cl_reader_readbyte(ls->rdr);
 	while(cl_char_isws(ls->cur));
-	if(ls->rdr->cur < ls->rdr->end)
-		// In case of EOF being the current token, there would be an infinite loop
+	if(ls->cur != CL_READER_EOS)
+		// In case of EOF being the next token, there would be an infinite loop
 		cl_reader_skip(ls->rdr, -1);
 }
 
