@@ -13,6 +13,8 @@
 #include "prepr.h"
 #include "vector.h"
 
+#include <stdbool.h>
+
 #define CL_VM_STATE   int
 #define CL_VM_ERROR   0
 #define CL_VM_SUCCESS 1
