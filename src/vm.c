@@ -21,8 +21,7 @@ cl_vm_t* cl_vm_new(void) {
 
 
 static CL_VM_STATE cl_vm_expectn(cl_vm_t* vm, char* err) {
-	char* beg = vm->ls->rdr->cur;
-	char* cur = beg + 1;
+	char* cur = vm->ls->rdr->cur + 1;
 	char* end = vm->ls->rdr->end;
 
 	while(cl_char_isws(*cur) && cur < end) ++cur;
