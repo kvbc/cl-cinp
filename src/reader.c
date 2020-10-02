@@ -39,9 +39,9 @@ char cl_reader_readbyte(cl_reader_t* rdr) {
 }
 
 
-void cl_reader_skip(cl_reader_t* rdr, int bytes) {
-	rdr->cur += bytes;
-	rdr->col += bytes;
+void cl_reader_skip(cl_reader_t* rdr, int by) {
+	rdr->cur += by;
+	rdr->col += by;
 }
 
 
