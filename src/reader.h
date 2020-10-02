@@ -23,5 +23,5 @@ typedef struct {
 
 cl_reader_t* cl_reader_new(char* src);
 char cl_reader_readbyte(cl_reader_t* rdr);
-void cl_reader_skip(cl_reader_t* rdr, size_t bytes);
+void cl_reader_skip(cl_reader_t* rdr, int by);
 void cl_reader_close(cl_reader_t* rdr);
