@@ -28,6 +28,6 @@ Examples can be found in the `examples` directory.
 &nbsp;
 # Note
 
-In this repository i use .cl file extension for this language's source files, not for common lisp.
+In this repository i use `.cl` file extension for this language's source files, not for common lisp.
 
-I find it easier to write and read .cl instead of .custom_language or something like that.
+I find it easier to write and read `.cl` instead of `.custom_language` or something like that.
