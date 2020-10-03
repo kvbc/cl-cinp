@@ -123,10 +123,13 @@ void cl_vm_run(cl_vm_t* vm, char* src) {
 	vm->prepr = cl_prepr_new(src);
 
 	do {
-		if(!cl_vm_runtk(vm) && vm->err) {
-			printf("\nError %d:%d: %s\n", vm->ls->rdr->line,
+		if(!cl_vm_runtk(vm)) {
+			if(vm->err) {
+				printf("\nError %d:%d: %s\n", vm->ls->rdr->line,
 				   vm->ls->rdr->col - (vm->ls->tk_lexeme->len * (vm->ls->tk_type == TK_NUM)),
 				   vm->err);
+			}
+			break;
 		}
 	} while(vm->ls->tk_type != TK_EOF);
 
