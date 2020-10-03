@@ -25,6 +25,7 @@ When the stack is empty and a value is about to be popped off the stack, then it
 
 Examples can be found in the `examples` directory.
 
+&nbsp;
 # Note
 
 In this repository i use .cl file extension for this language's source files, not for common lisp.
