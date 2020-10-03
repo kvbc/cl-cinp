@@ -18,7 +18,6 @@ Custom language interpreter written in C. The language was inspired by a [reddit
 
 Comments in this language start with an `#` and go all the way to the end of the line.
 
-&nbsp;
 When the stack is empty and a value is about to be popped off the stack, then it just assumes that there's an 0.
 
 &nbsp;
