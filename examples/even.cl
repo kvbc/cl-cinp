@@ -1,5 +1,5 @@
 # even.cl
-# Determine if the given POSITIVE INTEGER is even
+# Determine if a given POSITIVE INTEGER is even
 # Very unefficient way since there's no other one
 
 
