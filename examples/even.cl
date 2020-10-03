@@ -1,9 +1,9 @@
 # even.cl
-# Determine if the given number is even
+# Determine if the given POSITIVE INTEGER is even
 # Very unefficient way since there's no other one
 
 
-push 1234	#number
+push 1234	#positive integer
 dup
 
 
