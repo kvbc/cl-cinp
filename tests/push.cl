@@ -24,7 +24,7 @@ push
 
 -3			# whitespace ignored
 
-push-		# it is a bug, but it's a very nice typedef for 0
+push-		# it is a bug, but it's a very nice "typedef" for 0
 push -
 push
 
